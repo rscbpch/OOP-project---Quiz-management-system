@@ -1,2 +1,9 @@
 # OOP-project---Quiz-management-system
-For OOP Java class Year 2 Term 2
+
+We will build a Quiz Management System that allows students to take quizzes with an admin (teacher) managing the quiz.
+# Features
+- User role: Admin and Students
+- Create quiz: Admin can create, edit, and delete quizzes (QCM or question)
+- Question database: Store multiple choice and short answer questions
+- Quiz attempt: Students can take quizzes
+- Scoring: Store and display student scores
