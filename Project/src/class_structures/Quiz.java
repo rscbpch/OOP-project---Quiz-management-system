@@ -3,11 +3,11 @@ package class_structures;
 public class Quiz {
     private int id;
     private String title;
-    private int createdBy; // admin id
+    private int creator; // admin id
 
-    public Quiz(int id, String title, int createdBy) {
+    public Quiz(int id, String title, int creator) {
         this.id = id;
         this.title = title;
-        this.createdBy = createdBy;
+        this.creator = creator;
     }
 }
