@@ -1,5 +1,6 @@
 package class_structures;
 
+// nigka
 public class Score {
     private int id;
     private int studentId;
