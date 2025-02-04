@@ -1,10 +1,10 @@
 package class_structures;
 
 public abstract class Qcm {
-    public int id;
-    public int quizId;
-    public String question;
-    private String[] options; // 4 options
+    protected int id;
+    protected int quizId;
+    protected String question;
+    private String[] options; 
     private String correctAnswer;
 
     public Qcm(int id, int quizId, String question, String[] options, String correctAnswer) {

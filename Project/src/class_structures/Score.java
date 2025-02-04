@@ -1,6 +1,5 @@
 package class_structures;
 
-// nigka
 public class Score {
     private int id;
     private int studentId;
@@ -11,6 +10,26 @@ public class Score {
         this.id = id;
         this.studentId = studentId;
         this.quizId = quizId;
+        this.score = score;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getStudentId() {
+        return studentId;
+    }
+
+    public int getQuizId() {
+        return quizId;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
         this.score = score;
     }
 }

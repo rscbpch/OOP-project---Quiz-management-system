@@ -3,14 +3,24 @@ package class_structures;
 // use abstract class becuase we dont need to create object from this class
 // we only need this class as the base class for admin and student
 public abstract class User { 
-    public int id;
-    public String name;
-    public String email;
+    protected int id;
+    protected String first_name;
+    protected String last_name;
+    protected String email;
     private String password;
 
-    public User(int id, String name, String email, String password) {
+    public User() {
+        this.id = 0;
+        this.first_name = "Unknown";
+        this.last_name = "Unknown";
+        this.email = "unknown@example.com";
+        this.password = "default";
+    }
+
+    public User(int id, String first_name, String last_name, String email, String password) {
         this.id = id;
-        this.name = name;
+        this.first_name = first_name;
+        this.last_name = last_name;
         this.email = email;
         this.password = password;
     }
