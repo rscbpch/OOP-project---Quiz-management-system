@@ -1,5 +1,3 @@
-package class_structures;
-
 public class Quiz {
     private int id;
     private String title;

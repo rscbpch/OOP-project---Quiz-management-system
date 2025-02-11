@@ -1,7 +1,5 @@
-package class_structures;
-
 // use abstract class becuase we dont need to create object from this class
-// we only need this class as the base class for admin and student
+// we only need this class as the base class for admin, teacher and student
 public abstract class User { 
     protected int id;
     protected String first_name;

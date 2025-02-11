@@ -1,5 +1,3 @@
-package class_structures;
-
 public class Qcm {
     public int id;
     public int quizId;

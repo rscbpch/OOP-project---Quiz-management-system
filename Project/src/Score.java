@@ -1,5 +1,3 @@
-package class_structures;
-
 public class Score {
     private int id;
     private int studentId;
