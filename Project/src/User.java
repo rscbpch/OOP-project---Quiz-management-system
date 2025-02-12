@@ -1,14 +1,15 @@
-public abstract class User { 
-    protected int id;
-    protected String username;
-    protected String firstName;
-    protected String lastName;
-    protected String email;
-    private String password;
-    protected String role;
+import java.util.Scanner;
 
-    public User(int id, String username, String firstName, String lastName, String email, String password, String role) {
-        this.id = id;
+public abstract class User { 
+    int id;
+    String username;
+    String firstName;
+    String lastName;
+    String email;
+    private String password;
+    String role;
+
+    public User(String username, String firstName, String lastName, String email, String password, String role) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -26,10 +27,9 @@ public abstract class User {
     }
 
     public void displayInfo() {
-        System.out.println("ID: " + id);
         System.out.println("Username: " + username);
         System.out.println("Name: " + firstName + " " + lastName);
         System.out.println("Email: " + email);
         System.out.println("Role: " + role);
     }
-}
+} 
