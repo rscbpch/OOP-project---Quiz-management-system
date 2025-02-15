@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 public abstract class User { 
     int id;
     String username;

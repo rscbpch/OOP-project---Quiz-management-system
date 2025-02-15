@@ -1,11 +1,16 @@
 import java.util.Scanner;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 public class Main {
     public static void main(String[] args) {
         System.out.println("\n== Welcome to the Quiz Management System! ==");
 
         Scanner sc = new Scanner(System.in);
-        System.out.println("Select your role \n1. Student \n2. Teacher \n3.Admin");
+        System.out.println("Select your role \n1. Student \n2. Teacher \n3. Admin");
         int role = opChecker(0, 3);
         System.out.println();
         if(role == 1) {     // student
@@ -19,7 +24,7 @@ public class Main {
             } else if(sOption == 2) {
                 User student = userRegister("Student");
                 System.out.println("\nStudent registered successfully!");
-                student.displayInfo();
+
             }
         } else if(role == 2) {      // teacher
             System.out.println("== Quiz Management System ==");
@@ -31,7 +36,7 @@ public class Main {
 
             } else if(tOption == 2) {
                 User student = userRegister("Teacher");
-                System.out.println("\nStudent registered successfully!");
+                System.out.println("\nTeacher registered successfully!");
                 student.displayInfo();
             }
         } else if(role == 3){       // admin
@@ -41,6 +46,10 @@ public class Main {
 
         }
     }
+
+    static final String dbUrl = "jdbc:mysql://localhost:3306";
+    static final String user = "root";
+
 
     public static int opChecker(int input, int option) {
         Scanner sc = new Scanner(System.in);
@@ -78,4 +87,6 @@ public class Main {
             return new Teacher(username, firstName, lastName, email, password, role);
         }
     }
+
+    
 }
