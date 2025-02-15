@@ -17,9 +17,9 @@ public class Main {
             if(sOption ==1) {
                 
             } else if(sOption == 2) {
-                User student = userRegister("Student");
+                User student = User.userRegister("Student");
                 System.out.println("\nStudent registered successfully!");
-
+                student.displayInfo();
             }
         } else if(role == 2) {      // teacher
             System.out.println("== Quiz Management System ==");
@@ -30,9 +30,7 @@ public class Main {
             if(tOption ==1) {
 
             } else if(tOption == 2) {
-                User student = userRegister("Teacher");
                 System.out.println("\nTeacher registered successfully!");
-                student.displayInfo();
             }
         } else if(role == 3){       // admin
             System.out.println("Admin");
@@ -41,7 +39,7 @@ public class Main {
 
         }
     }
-    
+
     public static int opChecker(int input, int option) {
         Scanner sc = new Scanner(System.in);
         while (input <= 0 || input > option) {
@@ -58,26 +56,4 @@ public class Main {
         }
         return input;
     }
-
-    public static User userRegister(String role) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("- Create a new account");
-        System.out.print("Enter first name: ");
-        String firstName = sc.nextLine();
-        System.out.print("Enter last name: ");
-        String lastName = sc.nextLine();
-        System.out.print("Enter username: ");
-        String username = sc.nextLine();
-        System.out.print("Enter email: ");
-        String email = sc.nextLine();
-        System.out.print("Enter password: ");
-        String password = sc.nextLine();
-        if (role.equals("Student")) {
-            return new Student(username, firstName, lastName, email, password, role);
-        } else {
-            return new Teacher(username, firstName, lastName, email, password, role);
-        }
-    }
-
-    
 }
