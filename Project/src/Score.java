@@ -33,7 +33,7 @@ public class Score {
         this.score = score;
     }
 
-    public void calculateScore(List<Qcm> questions, List<String> studentAnswers) {
+    public void studentScoreCalculation(List<Qcm> questions, List<String> studentAnswers) {
         int correctCount = 0;
         for (int i = 0; i < questions.size(); i++) {
             if (i < studentAnswers.size() && studentAnswers.get(i).equals(questions.get(i).getCorrectAnswer())) {
