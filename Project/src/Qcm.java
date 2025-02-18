@@ -22,4 +22,8 @@ public class Qcm {
         System.out.println(q1.options[0] + " " + q1.options[1]);
         System.out.println(q1.correctAnswer);
     }
+
+    public String getCorrectAnswer() {
+        return correctAnswer;
+    }
 }
