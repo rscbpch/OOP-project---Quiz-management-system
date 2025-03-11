@@ -3,26 +3,94 @@ public class Admin extends User {
         super(username, firstName, lastName, email, password, "Admin");
     }
     
+    //
+    public void manageUser(int option,int userId,String username, String firstName, String lastName, String email, String password, String role){
+        switch (option){
+            case 1:
+            addAdmin(username,firstName,lastName,email,password,role);
+            break;
+
+            case 2:
+            viewAllUser();
+            break;
+
+            case 3:
+            viewUserById(userId);
+            break;
+
+            case 4:
+            editUser(userId);
+            break;
+
+            case 5:
+            removeUser(userId);
+            break;
+            
+        }
+    }
+
+    
     //addUser function (admin)
-    public void addAdmin(String username, String firstName, String lastName, String email, String password, String role){
+    private void addAdmin(String username, String firstName, String lastName, String email, String password, String role){
         //will be complete later
+
     };
 
     //function for get all existen user in system including admin,teacher,student 
-    public void viewAllUser(){
+    private void viewAllUser(){
         //will be complete later
     };
 
+    private void viewUserById(int userId){};
+
+    private void editUser(int userId){};
+
     //a function that allow only admin to delete any user from the system
-    public void removeUser(int id){
+    private void removeUser(int userId){
         //
     };
 
-    //function that list all the existing quiz
-    public void viewAllQuizz(){};
 
+    public void manageQuiz(int option,String quizId){
+        switch (option) {
+            case 1:
+            listAllQuiz();
+            break;
+
+            case 2:
+            if (quizId != null){
+                listQuizById(quizId);
+            }else{
+                System.out.println("Please provide a quiz ID.");
+            }
+            break;
+
+            case 3:
+            if (quizId != null){
+                editQuiz(quizId);
+            }else{
+                System.out.println("Please provide a quiz ID.");
+            }
+            break;
+            
+            case 4:
+            if (quizId != null){
+                removeQuiz(quizId);
+            }else{
+                System.out.println("Please provide a quiz ID.");
+            }
+            break;
+        }
+    }
+
+    //function that list all the existing quiz
+    private void listAllQuiz(){};
+    // list the quiz by input id 
+    private void listQuizById(String quizId){};
+    //edit quiz
+    private void editQuiz(String quizId){};
     //function to remove any quiz by input it quizId
-    public void removeQuiz(int quizId){};
+    private void removeQuiz(String quizId){};
 
 
 
