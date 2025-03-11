@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class MySqlExample {
+public class DatabaseConnection {
   public static void main(String[] args) throws ClassNotFoundException {
     // Manually set your database connection details here
     String host = "mysql-2fe6a39d-quiz-management-system.h.aivencloud.com";      // Change to your MySQL host (e.g., "localhost" or an IP address)
