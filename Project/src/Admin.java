@@ -51,14 +51,14 @@ public class Admin extends User {
     };
 
 
-    public void manageQuiz(int option,String quizId){
+    public void manageQuiz(int option,int quizId){
         switch (option) {
             case 1:
             listAllQuiz();
             break;
 
             case 2:
-            if (quizId != null){
+            if (quizId != -1){
                 listQuizById(quizId);
             }else{
                 System.out.println("Please provide a quiz ID.");
@@ -66,7 +66,7 @@ public class Admin extends User {
             break;
 
             case 3:
-            if (quizId != null){
+            if (quizId != -1){
                 editQuiz(quizId);
             }else{
                 System.out.println("Please provide a quiz ID.");
@@ -74,7 +74,7 @@ public class Admin extends User {
             break;
             
             case 4:
-            if (quizId != null){
+            if (quizId != -1){
                 removeQuiz(quizId);
             }else{
                 System.out.println("Please provide a quiz ID.");
@@ -86,11 +86,11 @@ public class Admin extends User {
     //function that list all the existing quiz
     private void listAllQuiz(){};
     // list the quiz by input id 
-    private void listQuizById(String quizId){};
+    private void listQuizById(int quizId){};
     //edit quiz
-    private void editQuiz(String quizId){};
+    private void editQuiz(int quizId){};
     //function to remove any quiz by input it quizId
-    private void removeQuiz(String quizId){};
+    private void removeQuiz(int quizId){};
 
 
 
