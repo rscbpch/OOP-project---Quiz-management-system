@@ -15,9 +15,11 @@ public class Qcm {
     }
 
     //getter methods
-    public int getQuizId () { return quizId;}
+    public int getQuizId () {return quizId;}
     public String getQuestion () {return question;}
     public String[] getOptions () {return options;}
     public int getCorrectAnswer () {return correctAnswer;}
+
+    
 
 }
