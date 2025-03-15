@@ -59,7 +59,7 @@ public abstract class User {
     }
 
     public static void insertUserToDatabase(String username, String firstName, String lastName, String email, String password, String role) {
-        String tableName = role.equals("Student") ? "student" : "teacher";
+        String tableName = "users";
         String query = "INSERT INTO " + tableName + " (username, first_name, last_name, email, password, role) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.connect();
@@ -73,7 +73,7 @@ public abstract class User {
 
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
-                System.out.println("User successfully registered in the " + role + " table!");
+                System.out.println("User successfully registered in the users table!");
             } else {
                 System.out.println("Failed to register user in the database.");
             }
