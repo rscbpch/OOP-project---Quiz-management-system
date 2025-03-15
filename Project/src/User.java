@@ -58,13 +58,13 @@ public abstract class User {
         }
     }
 
-    public static void insertUserToDatabase(String username, String firstName, String lastName, String email, String password, String role) {
+    public static void insertUserToDatabase(String user_name, String firstName, String lastName, String email, String password, String role) {
         String tableName = "users";
-        String query = "INSERT INTO " + tableName + " (username, first_name, last_name, email, password, role) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO " + tableName + " (user_name, first_name, last_name, email, password, role) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.connect();
         PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, username);
+            stmt.setString(1, user_name);
             stmt.setString(2, firstName);
             stmt.setString(3, lastName);
             stmt.setString(4, email);

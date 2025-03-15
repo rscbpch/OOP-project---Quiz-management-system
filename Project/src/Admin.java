@@ -6,14 +6,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Admin extends User {
-    public Admin(String username, String firstName, String lastName, String email, String password, String role) {
-        super(username, firstName, lastName, email, password, "Admin");
+    public Admin(String user_name, String firstName, String lastName, String email, String password, String role) {
+        super(user_name, firstName, lastName, email, password, "Admin");
     }
 
 
     
     //
-    public void manageUser(int option,int userId,String username, String firstName, String lastName, String email, String password, String role){
+    public void manageUser(int option,int userId,String user_name, String firstName, String lastName, String email, String password, String role){
         switch (option){
             case 1:
             addAdmin();
@@ -38,40 +38,40 @@ public class Admin extends User {
         }
     }
 
-    //helper function for checking if the username is already exist
-    private boolean isUsernameExist(String username){
-        String query = "SELECT COUNT(*) FROM users WHERE username = ?";
+    //helper function for checking if the user_name is already exist
+    private boolean isUser_nameExist(String user_name){
+        String query = "SELECT COUNT(*) FROM users WHERE user_name = ?";
         try (Connection conn = DatabaseConnection.connect();
             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, username);
-            // Execute query and check if the username exists
+            stmt.setString(1, user_name);
+            // Execute query and check if the user_name exists
             var resultSet = stmt.executeQuery();
             if (resultSet.next() && resultSet.getInt(1) > 0) {
                 return true;
             }
         } catch (SQLException e) {
-            System.out.println("Error checking username: " + e.getMessage());
+            System.out.println("Error checking user_name: " + e.getMessage());
         }
         return false;
     }
 
     // helper function 
-    private String inputUsername(){
+    private String inputUser_name(){
         Scanner scanner = new Scanner(System.in);
-        String username;
+        String user_name;
 
         while (true){
-            System.out.println("Input username :");
-            username = scanner.nextLine();
+            System.out.println("Input user_name :");
+            user_name = scanner.nextLine();
 
-            if(isUsernameExist(username)){
-                System.out.println("Username already exists. Please choose another username.");
+            if(isUser_nameExist(user_name)){
+                System.out.println("User_name already exists. Please choose another user_name.");
             }else{
                 break;
             }
         }
 
-        return username;
+        return user_name;
     }
 
     // Helper function to input a valid first name (non-empty)
@@ -156,7 +156,7 @@ public class Admin extends User {
 
     //addUser function (admin)
     private void addAdmin(){
-        String username = inputUsername(); 
+        String user_name = inputUser_name(); 
         String firstName = inputFirstName();
         String lastName = inputLastName();
         String email = inputEmail();
@@ -165,8 +165,8 @@ public class Admin extends User {
 
         String hashedPassword = PasswordHasher.hashPassword(password);
 
-        Admin newAdmin = new Admin(username, firstName, lastName, email, hashedPassword, role);
-        insertUserToDatabase(username, firstName, lastName, email, hashedPassword, "Admin");
+        Admin newAdmin = new Admin(user_name, firstName, lastName, email, hashedPassword, role);
+        insertUserToDatabase(user_name, firstName, lastName, email, hashedPassword, "Admin");
         System.out.println("New admin added successfully!");
     };
 
