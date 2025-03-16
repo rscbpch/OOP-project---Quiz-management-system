@@ -20,6 +20,21 @@ public class Qcm {
     public String[] getOptions () {return options;}
     public int getCorrectAnswer () {return correctAnswer;}
 
-    
+    public void showQuestion () {
+        System.out.println(getQuestion());
+        String[] abc = getOptions();
+        for (int counter = 0; counter < abc.length; counter++){
+            System.out.println(counter+1 + ". " + abc[counter]);
+        }
+        int ansIndex = getCorrectAnswer();
+        ansIndex++;
+        System.out.println("Correct anwser: [" + ansIndex + "]");
+    }
+
+    public static void main(String[] args) {
+        String[] ttest = {"dog", "cat", "horse", "hamter"}; 
+        Qcm test = new Qcm(-1, -1, "which is the most popular pet ?", ttest, 1);
+        test.showQuestion();
+    }
 
 }
