@@ -3,6 +3,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+
 public abstract class User {
     int id;
     String username;
@@ -61,7 +62,6 @@ public abstract class User {
     public static void insertUserToDatabase(String user_name, String firstName, String lastName, String email, String password, String role) {
         String tableName = "users";
         String query = "INSERT INTO " + tableName + " (user_name, first_name, last_name, email, password, role) VALUES (?, ?, ?, ?, ?, ?)";
-
         try (Connection conn = DatabaseConnection.connect();
         PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, user_name);

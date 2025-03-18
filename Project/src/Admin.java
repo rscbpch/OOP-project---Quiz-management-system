@@ -1,5 +1,6 @@
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -13,22 +14,22 @@ public class Admin extends User {
 
     
     //
-    public void manageUser(int option,int userId,String user_name, String firstName, String lastName, String email, String password, String role){
+    public void manageUser(int option,int userId,String user_name, String firstName, String lastName, String email, String password, String role) throws SQLException{
         switch (option){
             case 1:
             addAdmin();
             break;
 
             case 2:
-            viewAllUser();
+            viewAllUsers();
             break;
 
             case 3:
-            viewUserById(userId);
+            viewUserById();
             break;
 
             case 4:
-            editUser(userId);
+            editUser();
             break;
 
             case 5:
@@ -53,6 +54,29 @@ public class Admin extends User {
             System.out.println("Error checking user_name: " + e.getMessage());
         }
         return false;
+    }
+
+    //helper function to check if the user with inputID exist 
+    private boolean userExists(int userId) throws SQLException{
+        String query = "select user_id from users where user_id = ?";
+        try(Connection conn = DatabaseConnection.connect();
+        PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setInt(1,userId);
+            try(ResultSet rs = stmt.executeQuery()){
+                return rs.next();
+            }
+        }
+    }
+
+    //helper function for update the user information
+    private boolean updateUserFields(int userId,String field,String newValue) throws SQLException{
+        String query = "UPDATE users SET  "+ field + " = ? WHERE user_id = ?";
+        try(Connection conn = DatabaseConnection.connect();
+        PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setString(1, newValue);
+            stmt.setInt(2,userId);
+            return stmt.executeUpdate() > 0;
+        }
     }
 
     // helper function 
@@ -151,6 +175,24 @@ public class Admin extends User {
 
         return password;
     }
+    //helper fucntion for input Quiz ID
+    private int inputID (){
+        Scanner scanner = new Scanner(System.in);
+        int id;
+
+        
+        while (true){
+            System.out.println("Input ID:");
+            if (scanner.hasNextInt()) {
+                id = scanner.nextInt();
+                break;
+            } else {
+                System.out.println("Invalid input. Please enter a valid quiz ID.");
+                scanner.next();
+            }
+        }
+        return id;
+    }
 
 
 
@@ -170,14 +212,128 @@ public class Admin extends User {
         System.out.println("New admin added successfully!");
     };
 
+
     //function for get all existen user in system including admin,teacher,student 
-    private void viewAllUser(){
-        //will be complete later
+    private void viewAllUsers() {
+    String query = "SELECT user_id, user_name, first_name, last_name, email, role FROM users"; // Exclude password
+
+    try (Connection conn = DatabaseConnection.connect();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        ResultSet rs = stmt.executeQuery()) {
+
+        System.out.println("user_ID | Username | First Name | Last Name | Email | Role");
+        System.out.println("--------------------------------------------------------");
+
+        while (rs.next()) {
+            int id = rs.getInt("user_id");
+            String userName = rs.getString("user_name");
+            String firstName = rs.getString("first_name");
+            String lastName = rs.getString("last_name");
+            String email = rs.getString("email");
+            String role = rs.getString("role");
+
+            System.out.println(id + " | " + userName + " | " + firstName + " | " + lastName + " | " + email + " | " + role);
+        }
+
+    } catch (SQLException e) {
+        System.out.println("Error retrieving users from database: " + e.getMessage());
+    }
+}
+
+
+    private void viewUserById() throws SQLException{
+        int userId = inputID();
+        String query = "SELECT user_id, user_name, first_name, last_name, email, role FROM users where user_id = ?" ;
+
+        try(Connection conn = DatabaseConnection.connect();
+        PreparedStatement stmt = conn.prepareStatement(query)){
+        stmt.setInt(1,userId);
+        try (ResultSet rs = stmt.executeQuery()){
+            if (rs.next()){
+                int id = rs.getInt("user_id");
+                String userName= rs.getString("user_name");
+                String firstName = rs.getString("first_name");
+                String lastName = rs.getString("last_name");
+                String email = rs.getString("email");
+                String role = rs.getString("role");
+
+                System.out.println("User Details:");
+                System.out.println("--------------------------------------------------------");
+                System.out.println("ID: " + id);
+                System.out.println("Username: " + userName);
+                System.out.println("First Name: " + firstName);
+                System.out.println("Last Name: " + lastName);
+                System.out.println("Email: " + email);
+                System.out.println("Role: " + role);
+            }else{
+                System.out.println("This user with ID: "+userId+" does not exist");
+            }
+        }
+        }
+        
     };
 
-    private void viewUserById(int userId){};
+    private void editUser()throws SQLException{
+        System.out.println("Please input user ID you want to edit information");
+        int userId = inputID();
+        Scanner scanner = new Scanner(System.in);
+        
+        if (!userExists(userId)){
+            System.out.println("Error no user with this ID found pls try again");
+        }
 
-    private void editUser(int userId){};
+        while(true){
+            System.out.println("\nWhat do you want to edit?");
+            System.out.println("1. Username");
+            System.out.println("2. First Name");
+            System.out.println("3. Last Name");
+            System.out.println("4. Email");
+            System.out.println("5. Role");
+            System.out.println("6. Exit");
+            System.out.print("Choose an option (1-6): ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+            
+            switch (choice) {
+                case 1:
+                System.out.println("Input a new Username : ");
+                String newUsername = scanner.nextLine();
+                updateUserFields(userId, "user_name", newUsername);
+                System.out.println("Username updated successfully.");
+                break;
+                case 2:
+                System.out.println("Input a new firstname : ");
+                String newFirstname = scanner.nextLine();
+                updateUserFields(userId, "first_name", newFirstname);
+                System.out.println("Firstname updated successfully.");
+                break;
+                case 3:
+                System.out.println("Input a new Lastname : ");
+                String newLastname = scanner.nextLine();
+                updateUserFields(userId, "last_name", newLastname);
+                System.out.println("Lastname updated successfully.");
+                break;
+                case 4:
+                System.out.println("Input a new Email : ");
+                String newEmail = scanner.nextLine();
+                updateUserFields(userId, "email", newEmail);
+                System.out.println("Email updated successfully.");
+                break;
+                case 5:
+                System.out.println("Input a new role : ");
+                String newRole = scanner.nextLine();
+                updateUserFields(userId, "role", newRole);
+                System.out.println("Role updated successfully.");
+                break;
+                case 6:
+                System.out.println("Exit the program........");
+                return;
+                default:
+                System.out.println("Error Invalid choice");
+            }
+        }
+    };
 
     //a function that allow only admin to delete any user from the system
     private void removeUser(int userId){
@@ -226,12 +382,15 @@ public class Admin extends User {
     //function to remove any quiz by input it quizId
     private void removeQuiz(int quizId){};
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         // Simulate user input for testing
         Admin admin = new Admin("admin123", "John", "Doe", "johndoe@example.com", "password123", "Admin");
 
         // Call addAdmin to test the function
-        admin.addAdmin();
+        // admin.addAdmin();
+        // admin.viewAllUsers();
+        // admin.viewUserById();
+        admin.editUser();
     }
 }
 
