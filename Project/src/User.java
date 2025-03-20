@@ -119,31 +119,39 @@ public abstract class User {
         }
     }
 
-    public static boolean loginUser(String email, String password) {
-        String query = "SELECT password, role FROM users WHERE email = ?";
+    public static User loginUser(String email, String password) {
+    String query = "SELECT user_id, user_name, first_name, last_name, email, password, role FROM users WHERE email = ?";
 
-        try (Connection conn = DatabaseConnection.connect();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+    try (Connection conn = DatabaseConnection.connect();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setString(1, email.trim());
-            ResultSet rs = stmt.executeQuery();
+        stmt.setString(1, email.trim());
+        ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) {
-                String storedHashedPassword = rs.getString("password");
-                String enteredHashedPassword = PasswordHasher.hashPassword(password.trim()); 
+        if (rs.next()) {
+            String storedHashedPassword = rs.getString("password");
+            String enteredHashedPassword = PasswordHasher.hashPassword(password.trim());
 
-                if (storedHashedPassword.equals(enteredHashedPassword)) {
-                    System.out.println("Login successful! Role: " + rs.getString("role"));
-                    return true;
-                } else {
-                    System.out.println("Incorrect password. Try again.");
-                }
+            if (storedHashedPassword.equals(enteredHashedPassword)) {
+                String username = rs.getString("user_name");
+                String firstName = rs.getString("first_name");
+                String lastName = rs.getString("last_name");
+                String role = rs.getString("role");
+
+                System.out.println("\nLogin successful!");
+                return role.equalsIgnoreCase("Student") ?
+                        new Student(username, firstName, lastName, email, storedHashedPassword, role) :
+                        new Teacher(username, firstName, lastName, email, storedHashedPassword, role);
             } else {
-                System.out.println("User not found. Please register.");
+                System.out.println("\nIncorrect password. Try again.");
             }
-        } catch (SQLException e) {
-            System.out.println("Database error: " + e.getMessage());
+        } else {
+            System.out.println("\nUser not found. Please register.");
         }
-        return false;
+    } catch (SQLException e) {
+        System.out.println("Database error: " + e.getMessage());
     }
+    return null;
+}
+
 }

@@ -12,46 +12,52 @@ public class Main {
         int role = opChecker(0, 3);
         System.out.println();
         
-        if(role == 1) {  // Student
+        if (role == 1) {  // Student
             System.out.println("== Quiz Management System ==");
-            System.out.println("Welcome, Student! Please select an option");
+            System.out.println("Welcome, Student! \nPlease select an option");
             System.out.println("1. Login \n2. Register/Sign up");
             int sOption = opChecker(0, 2);
             System.out.println();
-
-            if(sOption == 1) {
-                // Implement login functionality
+        
+            if (sOption == 1) {
                 Scanner scanner = new Scanner(System.in);
                 System.out.print("Enter email: ");
                 String email = scanner.nextLine();
                 System.out.print("Enter password: ");
                 String password = scanner.nextLine();
-            
-                boolean loggedIn = User.loginUser(email, password); 
-                if (loggedIn) {
-                    System.out.println("== Welcome to the system! ==");
-                } else {
-                    System.out.println("Login failed.");
+        
+                User loggedInUser = User.loginUser(email, password);
+                if (loggedInUser != null) {
+                    System.out.println("\n== Welcome, " + loggedInUser.firstName + " " + loggedInUser.lastName + " ==\n");
                 }
-            } else if(sOption == 2) {
+            } else if (sOption == 2) {
                 User student = User.userRegister("Student");
-                students.add(student); 
+                students.add(student);
                 System.out.println("\nStudent registered successfully!");
-                student.displayInfo();
+                System.out.println("\n== Welcome, " + student.firstName + " " + student.lastName + " ==\n");
             }
-        } else if(role == 2) {  // Teacher
+        } else if (role == 2) {  // Teacher
             System.out.println("== Quiz Management System ==");
             System.out.println("Welcome, Teacher! Please select an option");
             System.out.println("1. Login \n2. Register/Sign up");
             int tOption = opChecker(0, 2);
             System.out.println();
-
-            if(tOption == 1) {
-                // Implement login functionality
-            } else if(tOption == 2) {
+        
+            if (tOption == 1) {
+                Scanner scanner = new Scanner(System.in);
+                System.out.print("Enter email: ");
+                String email = scanner.nextLine();
+                System.out.print("Enter password: ");
+                String password = scanner.nextLine();
+        
+                User loggedInUser = User.loginUser(email, password);
+                if (loggedInUser != null) {
+                    System.out.println("\n== Welcome, " + loggedInUser.firstName + " " + loggedInUser.lastName + " ==\n");
+                }
+            } else if (tOption == 2) {
                 User teacher = User.userRegister("Teacher");
                 System.out.println("\nTeacher registered successfully!");
-                teacher.displayInfo();
+                System.out.println("\n== Welcome, " + teacher.firstName + " " + teacher.lastName + " ==\n");
             }
         } else if(role == 3){  // Admin
             System.out.println("== Admin Panel ==");
