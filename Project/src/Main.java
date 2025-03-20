@@ -21,9 +21,21 @@ public class Main {
 
             if(sOption == 1) {
                 // Implement login functionality
+                Scanner scanner = new Scanner(System.in);
+                System.out.print("Enter email: ");
+                String email = scanner.nextLine();
+                System.out.print("Enter password: ");
+                String password = scanner.nextLine();
+            
+                boolean loggedIn = User.loginUser(email, password); 
+                if (loggedIn) {
+                    System.out.println("== Welcome to the system! ==");
+                } else {
+                    System.out.println("Login failed.");
+                }
             } else if(sOption == 2) {
                 User student = User.userRegister("Student");
-                students.add(student); // Store the registered student
+                students.add(student); 
                 System.out.println("\nStudent registered successfully!");
                 student.displayInfo();
             }
