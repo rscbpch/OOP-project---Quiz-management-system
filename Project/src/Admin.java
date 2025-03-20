@@ -6,6 +6,8 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.mysql.cj.xdevapi.PreparableStatement;
+
 public class Admin extends User {
     public Admin(String user_name, String firstName, String lastName, String email, String password, String role) {
         super(user_name, firstName, lastName, email, password, "Admin");
@@ -14,29 +16,47 @@ public class Admin extends User {
 
     
     //
-    public void manageUser(int option,int userId,String user_name, String firstName, String lastName, String email, String password, String role) throws SQLException{
-        switch (option){
-            case 1:
-            addAdmin();
-            break;
-
-            case 2:
-            viewAllUsers();
-            break;
-
-            case 3:
-            viewUserById();
-            break;
-
-            case 4:
-            editUser();
-            break;
-
-            case 5:
-            removeUser(userId);
-            break;
+    public void manageUser() throws SQLException {
+        Scanner scanner = new Scanner(System.in);
+        int option;
+        
+        do {
+            System.out.println("\nUser Management Menu:");
+            System.out.println("1. Add Admin");
+            System.out.println("2. View All Users");
+            System.out.println("3. View User by ID");
+            System.out.println("4. Edit User");
+            System.out.println("5. Remove User");
+            System.out.println("0. Exit");
+            System.out.print("Enter your choice: ");
             
-        }
+            option = scanner.nextInt();
+            
+            switch (option) {
+                case 1:
+                    addAdmin();
+                    break;
+                case 2:
+                    viewAllUsers();
+                    break;
+                case 3:
+                    viewUserById();
+                    break;
+                case 4:
+                    editUser();
+                    break;
+                case 5:
+                    removeUser();
+                    break;
+                case 0:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (option != 0);
+        
+        scanner.close();
     }
 
     //helper function for checking if the user_name is already exist
@@ -175,7 +195,7 @@ public class Admin extends User {
 
         return password;
     }
-    //helper fucntion for input Quiz ID
+    //helper fucntion for input  ID
     private int inputID (){
         Scanner scanner = new Scanner(System.in);
         int id;
@@ -187,7 +207,7 @@ public class Admin extends User {
                 id = scanner.nextInt();
                 break;
             } else {
-                System.out.println("Invalid input. Please enter a valid quiz ID.");
+                System.out.println("Invalid input. Please enter a valid  ID.");
                 scanner.next();
             }
         }
@@ -207,7 +227,7 @@ public class Admin extends User {
 
         String hashedPassword = PasswordHasher.hashPassword(password);
 
-        Admin newAdmin = new Admin(user_name, firstName, lastName, email, hashedPassword, role);
+        // Admin newAdmin = new Admin(user_name, firstName, lastName, email, hashedPassword, role);
         insertUserToDatabase(user_name, firstName, lastName, email, hashedPassword, "Admin");
         System.out.println("New admin added successfully!");
     };
@@ -221,7 +241,6 @@ public class Admin extends User {
         PreparedStatement stmt = conn.prepareStatement(query);
         ResultSet rs = stmt.executeQuery()) {
 
-        System.out.println("user_ID | Username | First Name | Last Name | Email | Role");
         System.out.println("--------------------------------------------------------");
 
         while (rs.next()) {
@@ -232,7 +251,14 @@ public class Admin extends User {
             String email = rs.getString("email");
             String role = rs.getString("role");
 
-            System.out.println(id + " | " + userName + " | " + firstName + " | " + lastName + " | " + email + " | " + role);
+            System.out.println("User Details:");
+                System.out.println("--------------------------------------------------------");
+                System.out.println("ID: " + id);
+                System.out.println("Username: " + userName);
+                System.out.println("First Name: " + firstName);
+                System.out.println("Last Name: " + lastName);
+                System.out.println("Email: " + email);
+                System.out.println("Role: " + role);
         }
 
     } catch (SQLException e) {
@@ -271,7 +297,7 @@ public class Admin extends User {
         }
         }
         
-    };
+    }
 
     private void editUser()throws SQLException{
         System.out.println("Please input user ID you want to edit information");
@@ -333,12 +359,40 @@ public class Admin extends User {
                 System.out.println("Error Invalid choice");
             }
         }
-    };
+    }
 
     //a function that allow only admin to delete any user from the system
-    private void removeUser(int userId){
-        //
-    };
+    private void removeUser() throws SQLException{
+        int userId = inputID();
+
+        if(!userExists(userId)){
+            System.out.println("Error: No user found with ID " + userId);
+            return;
+        }
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Are you sure you want to remove this user? (yes/no)");
+        String confirmation = scanner.nextLine().trim().toLowerCase();
+
+        if(!confirmation.equals("yes")){
+            System.out.println("User removal cancled");
+            return;
+        }
+        String query = "DELETE from users where user_id = ?";
+        try (Connection conn = DatabaseConnection.connect();
+            PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("User with ID " + userId + " has been removed successfully.");
+            } else {
+                System.out.println("Error: Unable to remove user.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error removing user: " + e.getMessage());
+        }
+    }
 
 
     public void manageQuiz(int option,int quizId){
@@ -390,7 +444,9 @@ public class Admin extends User {
         // admin.addAdmin();
         // admin.viewAllUsers();
         // admin.viewUserById();
-        admin.editUser();
+        // admin.editUser();
+        // admin.removeUser();
+        admin.manageUser();
     }
 }
 

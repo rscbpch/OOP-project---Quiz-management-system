@@ -1,6 +1,7 @@
 {
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar",
-        "Project/lib/mariadb-java-client-3.5.2.jar"
-    ]
+  "java.project.referencedLibraries": [
+    "lib/**/*.jar",
+    "Project/lib/mariadb-java-client-3.5.2.jar",
+    "Project/lib/mysql-connector-j-9.2.0.jar"
+  ]
 }
