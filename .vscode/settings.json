@@ -1,7 +1,16 @@
 {
+<<<<<<< HEAD
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
         "Project/lib/mariadb-java-client-3.5.2.jar",
         "Project/lib/mysql-connector-j-9.2.0.jar"
     ]
 }
+=======
+  "java.project.referencedLibraries": [
+    "lib/**/*.jar",
+    "Project/lib/mariadb-java-client-3.5.2.jar",
+    "Project/lib/mysql-connector-j-9.2.0.jar"
+  ]
+}
+>>>>>>> 11ccf4705bce7ecefe31193967816bde09a406f8
