@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Random;
 import java.util.Scanner;
 
 public abstract class User {
@@ -65,6 +66,19 @@ public abstract class User {
             String password = sc.nextLine().trim();
             String hashedPassword = PasswordHasher.hashPassword(password);
     
+            if (role.equalsIgnoreCase("Teacher")) {
+                int verificationCode = generateVerificationCode();
+                System.out.println("\nYour verification code: " + verificationCode);
+                System.out.print("Enter the verification code: ");
+                int enteredCode = sc.nextInt();
+                sc.nextLine(); 
+
+                if (enteredCode != verificationCode) {
+                    System.out.println("Incorrect verification code! Registration failed.");
+                    return null;
+                }
+            }
+
             insertUserToDatabase(username, firstName, lastName, email, hashedPassword, role);
     
             if (role.equalsIgnoreCase("Student")) {
@@ -73,7 +87,12 @@ public abstract class User {
                 return new Teacher(username, firstName, lastName, email, hashedPassword, role);
             }
         }
-    }    
+    }
+    
+    public static int generateVerificationCode() {
+        Random rand = new Random();
+        return 100000 + rand.nextInt(900000); 
+    }
     
     public static boolean isUsernameOrEmailExist(String username, String email) {
         String query = "SELECT COUNT(*) FROM users WHERE user_name = ? OR email = ?";
@@ -110,7 +129,7 @@ public abstract class User {
 
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
-                System.out.println("User successfully registered in the database!");
+                System.out.println("User registered successfully!");
             } else {
                 System.out.println("Failed to register user.");
             }

@@ -5,66 +5,92 @@ public class Main {
     private static ArrayList<User> students = new ArrayList<>();
 
     public static void main(String[] args) {
-        System.out.println("\n== Welcome to the Quiz Management System! ==");
+        while (true) {
+            System.out.println("\n== Welcome to the Quiz Management System! ==");
 
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Select your role \n1. Student \n2. Teacher \n3. Admin");
-        int role = opChecker(0, 3);
-        System.out.println();
-        
-        if (role == 1) {  // Student
-            System.out.println("== Quiz Management System ==");
-            System.out.println("Welcome, Student! \nPlease select an option");
-            System.out.println("1. Login \n2. Register/Sign up");
-            int sOption = opChecker(0, 2);
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Select your role \n1. Student \n2. Teacher \n3. Admin \n4. Exit");
+            int role = opChecker(0, 4);
             System.out.println();
-        
-            if (sOption == 1) {
-                Scanner scanner = new Scanner(System.in);
-                System.out.print("Enter email: ");
-                String email = scanner.nextLine();
-                System.out.print("Enter password: ");
-                String password = scanner.nextLine();
-        
-                User loggedInUser = User.loginUser(email, password);
-                if (loggedInUser != null) {
-                    System.out.println("\n== Welcome, " + loggedInUser.firstName + " " + loggedInUser.lastName + " ==\n");
+            
+            if (role == 1) {  // Student
+                System.out.println("== Quiz Management System ==");
+                System.out.println("Welcome, Student! \nPlease select an option");
+                System.out.println("1. Login \n2. Register/Sign up");
+                int sOption = opChecker(0, 2);
+                System.out.println();
+            
+                if (sOption == 1) {
+                    Scanner scanner = new Scanner(System.in);
+                    System.out.print("Enter email: ");
+                    String email = scanner.nextLine();
+                    System.out.print("Enter password: ");
+                    String password = scanner.nextLine();
+            
+                    User loggedInUser = User.loginUser(email, password);
+                    if (loggedInUser != null) {
+                        System.out.println("\nWelcome, " + loggedInUser.firstName + " " + loggedInUser.lastName);
+                        System.out.println("Please select an option");
+                        System.out.println("1. Take a quiz \n2. View quiz history \n3. Exit");
+                        int ssOption = opChecker(0, 3);
+                        System.out.println();
+                        
+                        if (ssOption == 1) {
+
+                        } else if (ssOption == 2) {
+
+                        } else {
+                            break;
+                        }
+                    }
+                } else if (sOption == 2) {
+                    User student = User.userRegister("Student");
+                    students.add(student);
+                    System.out.println("\nStudent registered successfully!");
                 }
-            } else if (sOption == 2) {
-                User student = User.userRegister("Student");
-                students.add(student);
-                System.out.println("\nStudent registered successfully!");
-                System.out.println("\n== Welcome, " + student.firstName + " " + student.lastName + " ==\n");
-            }
-        } else if (role == 2) {  // Teacher
-            System.out.println("== Quiz Management System ==");
-            System.out.println("Welcome, Teacher! Please select an option");
-            System.out.println("1. Login \n2. Register/Sign up");
-            int tOption = opChecker(0, 2);
-            System.out.println();
-        
-            if (tOption == 1) {
-                Scanner scanner = new Scanner(System.in);
-                System.out.print("Enter email: ");
-                String email = scanner.nextLine();
-                System.out.print("Enter password: ");
-                String password = scanner.nextLine();
-        
-                User loggedInUser = User.loginUser(email, password);
-                if (loggedInUser != null) {
-                    System.out.println("\n== Welcome, " + loggedInUser.firstName + " " + loggedInUser.lastName + " ==\n");
+            } else if (role == 2) {  // Teacher
+                System.out.println("== Quiz Management System ==");
+                System.out.println("Welcome, Teacher! Please select an option");
+                System.out.println("1. Login \n2. Register/Sign up");
+                int tOption = opChecker(0, 2);
+                System.out.println();
+            
+                if (tOption == 1) {
+                    Scanner scanner = new Scanner(System.in);
+                    System.out.print("Enter email: ");
+                    String email = scanner.nextLine();
+                    System.out.print("Enter password: ");
+                    String password = scanner.nextLine();
+            
+                    User loggedInUser = User.loginUser(email, password);
+                    if (loggedInUser != null) {
+                        System.out.println("\nWelcome, " + loggedInUser.firstName + " " + loggedInUser.lastName);
+                        System.out.println("Please select an option");
+                        System.out.println("1. Create a quiz \n2. Show all created quiz \n3. Exit");
+                        int ttOption = opChecker(0, 3);
+                        System.out.println();
+                        
+                        if (ttOption == 1) {
+
+                        } else if (ttOption == 2) {
+
+                        } else {
+                            break;
+                        }
+                    }
+                } else if (tOption == 2) {
+                    User teacher = User.userRegister("Teacher");
+                    System.out.println("\nTeacher registered successfully!");
                 }
-            } else if (tOption == 2) {
-                User teacher = User.userRegister("Teacher");
-                System.out.println("\nTeacher registered successfully!");
-                System.out.println("\n== Welcome, " + teacher.firstName + " " + teacher.lastName + " ==\n");
-            }
-        } else if(role == 3){  // Admin
-            System.out.println("== Admin Panel ==");
-            System.out.println("1. View All Students");
-            int adminChoice = opChecker(0, 1);
-            if(adminChoice == 1) {
-                printAllStudents();
+            } else if (role == 3) {  // Admin
+                System.out.println("== Admin Panel ==");
+                System.out.println("1. View All Students");
+                int adminChoice = opChecker(0, 1);
+                if(adminChoice == 1) {
+                    printAllStudents();
+                }
+            } else {
+                break;
             }
         }
     }
