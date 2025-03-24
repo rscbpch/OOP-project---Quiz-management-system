@@ -15,6 +15,7 @@ public class Quiz {
         this.questions = new ArrayList<>();
     }
 
+    //NONE OF THESE ARE USED 
     //getter methods
     public int getId() {return id;}
     public String getTitle() {return title;}

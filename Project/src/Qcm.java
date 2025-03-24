@@ -14,6 +14,7 @@ public class Qcm {
         this.correctAnswer = correctAnswer;
     }
 
+    // NONE OF THESE ARE USED
     //getter methods
     public int getQuizId () {return quizId;}
     public String getQuestion () {return question;}
