@@ -90,14 +90,14 @@ public class QuizManager {
         try {
             Connection con = DatabaseConnection.connect();
             System.out.println("Connection Successful!");
-            String query = "SELECT * FROM quiz";
+            String query = "SELECT * FROM quizzes";
             PreparedStatement ps = con.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 // Fetch and display results
-                int quizId = rs.getInt("quizId");
-                String quizTitle = rs.getString("quizTitle");
-                int creatorId = rs.getInt("quizCreatorId");
+                int quizId = rs.getInt("quiz_id");
+                String quizTitle = rs.getString("title");
+                int creatorId = rs.getInt("creator_id");
                 System.out.println("Quiz ID: " + quizId + ", Title: " + quizTitle + ", Creator ID: " + creatorId);
                 System.out.println();
             }
@@ -112,31 +112,31 @@ public class QuizManager {
 
         try {
             Connection con = DatabaseConnection.connect();
-            String query2 = "SELECT * FROM quiz where quizId = ?";
+            String query2 = "SELECT * FROM quizzes where quiz_id = ?";
             PreparedStatement ps2 = con.prepareStatement(query2);
             ps2.setInt(1, qid); // 'title' is the user input you're querying by
             ResultSet rs2 = ps2.executeQuery();
             while (rs2.next()) {
                 // Fetch and display results
-                int quizId = rs2.getInt("quizId");
-                String quizTitle = rs2.getString("quizTitle");
-                int creatorId = rs2.getInt("quizCreatorId");
+                int quizId = rs2.getInt("quiz_id");
+                String quizTitle = rs2.getString("title");
+                int creatorId = rs2.getInt("creator_id");
                 System.out.println("Quiz ID: " + quizId + ", Title: " + quizTitle + ", Creator ID: " + creatorId);
                 System.out.println();
             }
 
-            String selectQuery = "select * from qcm where quizId = ?";
+            String selectQuery = "select * from qcms where quiz_id = ?";
             PreparedStatement psSelect = con.prepareStatement(selectQuery);
             psSelect.setInt(1, qid);
             ResultSet rs = psSelect.executeQuery();
             while (rs.next()) {
-                int questionId = rs.getInt("qcmId"); // Assuming 'qcmId' is the ID column for the question
-                String question = rs.getString("qcmQuestion"); // Get the question text
-                String option1 = rs.getString("qcm1"); // Option 1
-                String option2 = rs.getString("qcm2"); // Option 2
-                String option3 = rs.getString("qcm3"); // Option 3
-                String option4 = rs.getString("qcm4"); // Option 4
-                int correctAnswer = rs.getInt("qcmAnswer"); // Get the correct answer (index 0-3)
+                // int questionId = rs.getInt("qcmId"); // Assuming 'qcmId' is the ID column for the question
+                String question = rs.getString("question"); // Get the question text
+                String option1 = rs.getString("option_1"); // Option 1
+                String option2 = rs.getString("option_2"); // Option 2
+                String option3 = rs.getString("option_3"); // Option 3
+                String option4 = rs.getString("option_4"); // Option 4
+                int correctAnswer = rs.getInt("correct_option"); // Get the correct answer (index 0-3)
 
                 // Display the question and options
                 System.out.println("Question: " + question);
@@ -144,7 +144,7 @@ public class QuizManager {
                 System.out.println("2. " + option2);
                 System.out.println("3. " + option3);
                 System.out.println("4. " + option4);
-                System.out.println("Correct Answer: " + (correctAnswer + 1)); // Display correct answer (1-based index)
+                System.out.println("Correct Answer: " + (correctAnswer)); // Display correct answer (1-based index)
                 System.out.println();
                 }
             con.close();
@@ -160,27 +160,7 @@ public class QuizManager {
         System.out.println("Enter the quizId you want to view:");
         qid = scanner.nextInt();
         scanner.nextLine();
-
-        try {
-            Connection con = DatabaseConnection.connect();
-            String query2 = "SELECT * FROM quiz where quizId = ?";
-            PreparedStatement ps2 = con.prepareStatement(query2);
-            ps2.setInt(1, qid); // 'title' is the user input you're querying by
-            ResultSet rs2 = ps2.executeQuery();
-            while (rs2.next()) {
-                // Fetch and display results
-                int quizId = rs2.getInt("quizId");
-                String quizTitle = rs2.getString("quizTitle");
-                int creatorId = rs2.getInt("quizCreatorId");
-                System.out.println("Quiz ID: " + quizId + ", Title: " + quizTitle + ", Creator ID: " + creatorId);
-            }
-
-            
-            con.close();
-        } catch (SQLException err) {
-            err.printStackTrace();
-        }
-
+        getQuestions(qid);
     }
 
     //play time
@@ -194,18 +174,18 @@ public class QuizManager {
 
         try {
             Connection con = DatabaseConnection.connect();
-            String selectQuery = "select * from qcm where quizId = ?";
+            String selectQuery = "select * from qcms where quiz_id = ?";
             PreparedStatement psSelect = con.prepareStatement(selectQuery);
             psSelect.setInt(1, playIndex);
             ResultSet rs = psSelect.executeQuery();
             while (rs.next()) {
-                int questionId = rs.getInt("qcmId"); // Assuming 'qcmId' is the ID column for the question
-                String question = rs.getString("qcmQuestion"); // Get the question text
-                String option1 = rs.getString("qcm1"); // Option 1
-                String option2 = rs.getString("qcm2"); // Option 2
-                String option3 = rs.getString("qcm3"); // Option 3
-                String option4 = rs.getString("qcm4"); // Option 4
-                int correctAnswer = rs.getInt("qcmAnswer"); // Get the correct answer (index 0-3)
+                // int questionId = rs.getInt("qcmId"); // Assuming 'qcmId' is the ID column for the question
+                String question = rs.getString("question"); // Get the question text
+                String option1 = rs.getString("option_1"); // Option 1
+                String option2 = rs.getString("option_2"); // Option 2
+                String option3 = rs.getString("option_3"); // Option 3
+                String option4 = rs.getString("option_4"); // Option 4
+                int correctAnswer = rs.getInt("correct_option"); // Get the correct answer (index 0-3)
 
                 // Display the question and options
                 System.out.println("Question: " + question);
@@ -236,7 +216,7 @@ public class QuizManager {
     // TO BE IMPLEMENTED IN MAIN CHAT
     public static void main(String[] args) {
         QuizManager test = new QuizManager(); // Initialize the quiz system
-        test.createQuiz();
+        test.displayQQ();
 
         // Scanner scanner = new Scanner(System.in);
 
