@@ -215,37 +215,8 @@ public class QuizManager {
 
     // TO BE IMPLEMENTED IN MAIN CHAT
     public static void main(String[] args) {
-        QuizManager test = new QuizManager(); // Initialize the quiz system
+        QuizManager test = new QuizManager();
         test.displayQQ();
-
-        // Scanner scanner = new Scanner(System.in);
-
-        // while (true) {
-        //     System.out.println("\nWelcome to the Quiz System!");
-        //     System.out.println("1. Create a new quiz");
-        //     System.out.println("2. View an existing quiz");
-        //     System.out.println("3. Exit");
-        //     System.out.print("Choose an option: ");
-        //     int choice = scanner.nextInt();
-        //     scanner.nextLine(); // Consume newline
-
-        //     switch (choice) {
-        //         case 1:
-        //             test.createQuiz();
-        //             break;
-        //         case 2:
-        //             System.out.println("Enter quiz title: ");
-        //             String testTitle = scanner.nextLine();
-        //             test.getQuiz(testTitle);
-        //             break;
-        //         case 3:
-        //             System.out.println("Goodbye monkey");
-        //             return;
-        //         default:
-        //         System.out.println("No option.");
-        //             break;
-        //     }
-        // }
     }
 
 }
