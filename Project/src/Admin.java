@@ -14,9 +14,42 @@ public class Admin extends User {
     }
 
 
+    public void adminMenu() throws SQLException {
+        Scanner scanner = new Scanner(System.in);
+        int option;
+    
+        do {
+            System.out.println("\nAdmin Main Menu:");
+            System.out.println("1. Manage Users");
+            System.out.println("2. Manage Quizzes");
+            System.out.println("0. Logout");
+            System.out.print("Enter your choice: ");
+    
+            option = scanner.nextInt();
+    
+            switch (option) {
+                case 1:
+                    manageUser(); // Call user management menu
+                    break;
+                case 2:
+                    manageQuiz(); // Call quiz management menu
+                    break;
+                case 0:
+                    System.out.println("Logging out...");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (option != 0);
+    
+        scanner.close();
+    }
+    
+
+
     
     //
-    public void manageUser() throws SQLException {
+    private void manageUser() throws SQLException {
         Scanner scanner = new Scanner(System.in);
         int option;
         
@@ -59,6 +92,46 @@ public class Admin extends User {
         scanner.close();
     }
 
+    private void manageQuiz() throws SQLException {
+        Scanner scanner = new Scanner(System.in);
+        int option;
+    
+        do {
+            System.out.println("\nQuiz Management Menu:");
+            System.out.println("1. List All Quizzes");
+            System.out.println("2. View Quiz by ID");
+            System.out.println("3. Edit Quiz");
+            System.out.println("4. Remove Quiz");
+            System.out.println("0. Exit");
+            System.out.print("Enter your choice: ");
+    
+            option = scanner.nextInt();
+    
+            switch (option) {
+                case 1:
+                    listAllQuiz();
+                    break;
+                case 2:
+                    listQuizById();
+                    break;
+                case 3:
+                    editQuiz();
+                    break;
+                case 4:
+                    removeQuiz();
+                    break;
+                case 0:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (option != 0);
+    
+        scanner.close();
+    }
+    
+
     //helper function for checking if the user_name is already exist
     private boolean isUser_nameExist(String user_name){
         String query = "SELECT COUNT(*) FROM users WHERE user_name = ?";
@@ -87,6 +160,18 @@ public class Admin extends User {
             }
         }
     }
+
+        //helper function to check if the user with inputID exist 
+        private boolean quizExists(int quizId) throws SQLException{
+            String query = "select quiz_id from quizzes where quiz_id = ?";
+            try(Connection conn = DatabaseConnection.connect();
+            PreparedStatement stmt = conn.prepareStatement(query)){
+                stmt.setInt(1,quizId);
+                try(ResultSet rs = stmt.executeQuery()){
+                    return rs.next();
+                }
+            }
+        }
 
     //helper function for update the user information
     private boolean updateUserFields(int userId,String field,String newValue) throws SQLException{
@@ -319,7 +404,23 @@ public class Admin extends User {
             System.out.print("Choose an option (1-6): ");
 
             int choice = scanner.nextInt();
-            scanner.nextLine();
+            // Ensure the user inputs a valid choice (1-4)
+            while (true) {
+                if (scanner.hasNextInt()) {
+                    choice = scanner.nextInt();
+                    scanner.nextLine(); // consume the newline
+    
+                    if (choice >= 1 && choice <= 6) {
+                        break; // Exit the loop if the choice is valid
+                    } else {
+                        System.out.println("Error: Invalid choice. Please enter a number between 1 and 6.");
+                    }
+                } else {
+                    System.out.println("Error: Please enter a valid number.");
+                    scanner.nextLine(); // consume the invalid input
+                }
+            }
+
             
             switch (choice) {
                 case 1:
@@ -395,46 +496,184 @@ public class Admin extends User {
     }
 
 
-    public void manageQuiz(int option,int quizId){
-        switch (option) {
-            case 1:
-            listAllQuiz();
-            break;
-
-            case 2:
-            if (quizId != -1){
-                listQuizById(quizId);
-            }else{
-                System.out.println("Please provide a quiz ID.");
-            }
-            break;
-
-            case 3:
-            if (quizId != -1){
-                editQuiz(quizId);
-            }else{
-                System.out.println("Please provide a quiz ID.");
-            }
-            break;
-            
-            case 4:
-            if (quizId != -1){
-                removeQuiz(quizId);
-            }else{
-                System.out.println("Please provide a quiz ID.");
-            }
-            break;
-        }
-    }
+    
 
     //function that list all the existing quiz
-    private void listAllQuiz(){};
+    private void listAllQuiz(){
+        String query = "select * from quizzes";
+
+        try (Connection conn = DatabaseConnection.connect();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        ResultSet rs = stmt.executeQuery()) {
+
+        System.out.println("--------------------------------------------------------");
+
+        while (rs.next()) {
+            int id = rs.getInt("quiz_id");
+            int creator_id = rs.getInt("creator_id");
+            String title = rs.getString("title");
+            String description = rs.getString("description");
+
+            System.out.println("Quiz Details:");
+                System.out.println("--------------------------------------------------------");
+                System.out.println("ID: " + id);
+                System.out.println("Creator ID: " + creator_id);
+                System.out.println("Title: " + title);
+                System.out.println("Description: " + description);
+        }
+
+    } catch (SQLException e) {
+        System.out.println("Error retrieving quizzes from database: " + e.getMessage());
+    }
+
+
+    };
     // list the quiz by input id 
-    private void listQuizById(int quizId){};
+    private void listQuizById() throws SQLException{
+        int quizId = inputID();
+        String query = "SELECT * from quizzes where quiz_id = ?" ;
+
+        try(Connection conn = DatabaseConnection.connect();
+        PreparedStatement stmt = conn.prepareStatement(query)){
+        stmt.setInt(1,quizId);
+        try (ResultSet rs = stmt.executeQuery()){
+            if (rs.next()){
+                int id = rs.getInt("quiz_id");
+            int creator_id = rs.getInt("creator_id");
+            String title = rs.getString("title");
+            String description = rs.getString("description");
+
+            System.out.println("Quiz Details:");
+                System.out.println("--------------------------------------------------------");
+                System.out.println("ID: " + id);
+                System.out.println("Creator ID: " + creator_id);
+                System.out.println("Title: " + title);
+                System.out.println("Description: " + description);
+            }else{
+                System.out.println("The quiz with ID: "+quizId+" does not exist");
+            }
+        }
+        }
+    };
+
+    //helper function for update the user information
+    private boolean updateQuizFields(int quizId,String field,String newValue) throws SQLException{
+        String query = "UPDATE quizzes SET  "+ field + " = ? WHERE quiz_id = ?";
+        try(Connection conn = DatabaseConnection.connect();
+        PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setString(1, newValue);
+            stmt.setInt(2,quizId);
+            return stmt.executeUpdate() > 0;
+        }
+    }
     //edit quiz
-    private void editQuiz(int quizId){};
+    private void editQuiz() throws SQLException {
+        Scanner scanner = new Scanner(System.in);
+    
+        // Loop until a valid quiz ID is entered
+        int quizId;
+        while (true) {
+            System.out.println("Please input quiz ID you want to edit information:");
+            quizId = inputID();
+    
+            if (!quizExists(quizId)) {
+                System.out.println("Error: No quiz with this ID found. Please try again.");
+            } else {
+                break; // Exit the loop if the quiz ID is valid
+            }
+        }
+    
+        // Loop to handle editing options until valid choice is made or exit is selected
+        while (true) {
+            System.out.println("\nWhat do you want to edit?");
+            System.out.println("1. Title");
+            System.out.println("2. Creator");
+            System.out.println("3. Description");
+            System.out.println("4. Exit");
+            System.out.print("Choose an option (1-4): ");
+    
+            int choice;
+            // Ensure the user inputs a valid choice (1-4)
+            while (true) {
+                if (scanner.hasNextInt()) {
+                    choice = scanner.nextInt();
+                    scanner.nextLine(); // consume the newline
+    
+                    if (choice >= 1 && choice <= 4) {
+                        break; // Exit the loop if the choice is valid
+                    } else {
+                        System.out.println("Error: Invalid choice. Please enter a number between 1 and 4.");
+                    }
+                } else {
+                    System.out.println("Error: Please enter a valid number.");
+                    scanner.nextLine(); // consume the invalid input
+                }
+            }
+    
+            switch (choice) {
+                case 1:
+                    System.out.println("Input a new Title: ");
+                    String newTitle = scanner.nextLine();
+                    updateUserFields(quizId, "title", newTitle);
+                    System.out.println("Title updated successfully.");
+                    break;
+    
+                case 2:
+                    System.out.println("Input a new CreatorID: ");
+                    String newCreator = scanner.nextLine();
+                    updateUserFields(quizId, "creator_id", newCreator);
+                    System.out.println("Creator updated successfully.");
+                    break;
+    
+                case 3:
+                    System.out.println("Input a new Description: ");
+                    String newDescription = scanner.nextLine();
+                    updateUserFields(quizId, "description", newDescription);
+                    System.out.println("Description updated successfully.");
+                    break;
+    
+                case 4:
+                    System.out.println("Exiting the program...");
+                    return;
+    
+                default:
+                    System.out.println("Error: Invalid choice.");
+            }
+        }
+    }
+    
     //function to remove any quiz by input it quizId
-    private void removeQuiz(int quizId){};
+    private void removeQuiz() throws SQLException{
+        int quizId = inputID();
+
+        if(!quizExists(quizId)){
+            System.out.println("Error: No quiz found with ID " + quizId);
+            return;
+        }
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Are you sure you want to remove this quiz? (yes/no)");
+        String confirmation = scanner.nextLine().trim().toLowerCase();
+
+        if(!confirmation.equals("yes")){
+            System.out.println("Quiz removal cancled");
+            return;
+        }
+        String query = "DELETE from quizzes where quiz_id = ?";
+        try (Connection conn = DatabaseConnection.connect();
+            PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, quizId);
+
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Quiz with ID " + quizId + " has been removed successfully.");
+            } else {
+                System.out.println("Error: Unable to remove quiz.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error removing quiz: " + e.getMessage());
+        }
+    };
 
     public static void main(String[] args) throws SQLException {
         // Simulate user input for testing
@@ -446,7 +685,12 @@ public class Admin extends User {
         // admin.viewUserById();
         // admin.editUser();
         // admin.removeUser();
-        admin.manageUser();
+        // admin.manageUser();
+        // admin.listAllQuiz();
+        // admin.listQuizById();
+        // admin.editQuiz();
+        // admin.removeQuiz();
+        admin.adminMenu();
     }
 }
 
