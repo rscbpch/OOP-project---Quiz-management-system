@@ -721,5 +721,11 @@ public class Admin implements User {
         // admin.removeQuiz();
         admin.adminMenu();
     }
+
+    @Override
+    public int getId() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getId'");
+    }
 }
 

@@ -32,4 +32,10 @@ public class Student implements User {
     public String getEmail() {
         return email;
     }
+
+    @Override
+    public int getId() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getId'");
+    }
 }

@@ -5,24 +5,35 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class UserAuthentication {
-    public static User userLogin() {
+    public static String userLogin() {
         Scanner sc = new Scanner(System.in);
+        System.out.print("Enter your email: ");
+        String email = sc.nextLine();
 
-        while (true) {
-            System.out.print("Enter email: ");
-            String email = sc.nextLine();
-            System.out.print("Enter password: ");
-            String password = sc.nextLine();
+        System.out.print("Enter your password: ");
+        String password = sc.nextLine();
 
-            User loggedInUser = User.selectUserFromDatabase(email, password);
+        // Hash the input password using SHA-256
+        String hashedPassword = PasswordHasher.hashPassword(password);
 
-            if (loggedInUser != null) {
-                System.out.println("\nWelcome, " + loggedInUser.getFirstName() + " " + loggedInUser.getLastName());
-                return loggedInUser;  // Exit loop after successful login
+        // Query to check if the email and hashed password match
+        try (Connection conn = DatabaseConnection.connect()) {
+            String query = "SELECT email FROM users WHERE email = ? AND password = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, email);
+            stmt.setString(2, hashedPassword);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                System.out.println("Login successful!");
+                return email;  // Return email instead of user object
+            } else {
+                System.out.println("Invalid credentials. Try again.");
             }
-
-            System.out.println("\nLogin failed. Try again.\n");
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
     public static User userRegister(String role) {

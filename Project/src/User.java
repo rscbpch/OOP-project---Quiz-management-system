@@ -73,4 +73,5 @@ public interface User {
             System.out.println("Error inserting user into database: " + e.getMessage());
         }
     }
+    int getId();
 }
