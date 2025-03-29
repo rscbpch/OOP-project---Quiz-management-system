@@ -8,11 +8,40 @@ import java.util.regex.Pattern;
 
 import com.mysql.cj.xdevapi.PreparableStatement;
 
-public class Admin extends User {
-    public Admin(String user_name, String firstName, String lastName, String email, String password, String role) {
-        super(user_name, firstName, lastName, email, password, "Admin");
+public class Admin implements User {
+    private String username;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String password;
+
+    public Admin(String username, String firstName, String lastName, String email, String password) {
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = PasswordHasher.hashPassword(password);
     }
 
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public String getFirstName() {
+        return firstName;
+    }
+
+    @Override
+    public String getLastName() {
+        return lastName;
+    }
+
+    @Override
+    public String getEmail() {
+        return email;
+    }
 
     public void adminMenu() throws SQLException {
         Scanner scanner = new Scanner(System.in);
@@ -313,7 +342,7 @@ public class Admin extends User {
         String hashedPassword = PasswordHasher.hashPassword(password);
 
         // Admin newAdmin = new Admin(user_name, firstName, lastName, email, hashedPassword, role);
-        insertUserToDatabase(user_name, firstName, lastName, email, hashedPassword, "Admin");
+        User.insertUserToDatabase(user_name, firstName, lastName, email, hashedPassword, "Admin");
         System.out.println("New admin added successfully!");
     };
 
@@ -677,7 +706,7 @@ public class Admin extends User {
 
     public static void main(String[] args) throws SQLException {
         // Simulate user input for testing
-        Admin admin = new Admin("admin123", "John", "Doe", "johndoe@example.com", "password123", "Admin");
+        Admin admin = new Admin("admin123", "John", "Doe", "johndoe@example.com", "password123");
 
         // Call addAdmin to test the function
         // admin.addAdmin();
