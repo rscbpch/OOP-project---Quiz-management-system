@@ -21,7 +21,7 @@ public class Admin implements User {
         this.lastName = lastName;
         this.email = email;
         this.password = PasswordHasher.hashPassword(password);
-    }
+    }   
 
     @Override
     public String getUsername() {
@@ -41,6 +41,13 @@ public class Admin implements User {
     @Override
     public String getEmail() {
         return email;
+    }
+
+    
+    @Override
+    public int getId() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getId'");
     }
 
     public void adminMenu() throws SQLException {
@@ -337,7 +344,7 @@ public class Admin implements User {
         String lastName = inputLastName();
         String email = inputEmail();
         String password = inputPassword();
-        String role = "Admin";
+        String role = "admin";
 
         String hashedPassword = PasswordHasher.hashPassword(password);
 
@@ -720,12 +727,6 @@ public class Admin implements User {
         // admin.editQuiz();
         // admin.removeQuiz();
         admin.adminMenu();
-    }
-
-    @Override
-    public int getId() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getId'");
     }
 }
 

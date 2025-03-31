@@ -6,8 +6,8 @@ public class QuizManagementSystem {
         System.out.println("\n== Welcome to the Quiz Management System! ==");
 
         Scanner sc = new Scanner(System.in);
-        System.out.println("Select your role \n1. Student \n2. Teacher");
-        int role = opChecker(0, 2);
+        System.out.println("Select your role \n1. Student \n2. Teacher \n3. Admin");
+        int role = opChecker(0, 3);
         System.out.println();
 
         // Instantiate QuizManager
@@ -24,16 +24,16 @@ public class QuizManagementSystem {
                 String email = UserAuthentication.userLogin();
                 if (email != null) {
                     System.out.println("Please select an option");
-                    System.out.println("1. Take a quiz \n2. View quiz history \n3. Exit");
-                    int ssOption = opChecker(0, 3);
+                    System.out.println("1. Take a quiz \n2. View quiz history");
+                    int ssOption = opChecker(0, 2);
                     System.out.println();
 
                     if (ssOption == 1) {
                         // Call the takeQuiz method from QuizManager
-                        quizManager.takeQuiz(email);
+                        quizManager.playQuiz();;
                     } else if (ssOption == 2) {
                         // Call the viewQuizHistory method from QuizManager
-                        quizManager.viewQuizHistory(email);
+                        System.out.println("Do smth");
                     }
                 }
             } else if (sOption == 2) {
@@ -51,21 +51,28 @@ public class QuizManagementSystem {
                 String email = UserAuthentication.userLogin();
                 if (email != null) {
                     System.out.println("Please select an option");
-                    System.out.println("1. Create a quiz \n2. Show all created quiz \n3. Exit");
-                    int ttOption = opChecker(0, 3);
+                    System.out.println("1. Create a quiz \n2. Show all created quiz");
+                    int ttOption = opChecker(0, 2);
                     System.out.println();
 
                     if (ttOption == 1) {
                         // Call the createQuiz method from QuizManager
-                        quizManager.createQuiz(email);
+                        quizManager.createQuiz();
                     } else if (ttOption == 2) {
                         // Call the viewCreatedQuizzes method from QuizManager
-                        quizManager.viewCreatedQuizzes(email);
+                        quizManager.displayQQ();;
                     }
                 }
             } else if (tOption == 2) {
                 User teacher = UserAuthentication.userRegister("Teacher");
                 System.out.println("\nTeacher registered successfully!");
+            }
+        } else {                // Admin
+            String email = UserAuthentication.userLogin();
+            if (email != null) {
+                // implement admin menu here
+                
+
             }
         }
     }
@@ -86,5 +93,30 @@ public class QuizManagementSystem {
             }
         }
         return input;
+    }
+
+    public static void updateUser() {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter your current email: ");
+        String currentEmail = sc.nextLine();
+
+        System.out.print("New username (leave empty to keep old): ");
+        String newUsername = sc.nextLine();
+
+        System.out.print("New first name (leave empty to keep old): ");
+        String newFirstName = sc.nextLine();
+
+        System.out.print("New last name (leave empty to keep old): ");
+        String newLastName = sc.nextLine();
+
+        System.out.print("New email (leave empty to keep old): ");
+        String newEmail = sc.nextLine();
+
+        System.out.print("New password (leave empty to keep old): ");
+        String newPassword = sc.nextLine();
+
+        User.updateUserInDatabase(currentEmail, newUsername, newFirstName, newLastName, newEmail, newPassword);
+        sc.close();
     }
 }

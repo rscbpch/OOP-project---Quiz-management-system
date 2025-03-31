@@ -9,10 +9,43 @@ public interface User {
     String getFirstName();
     String getLastName();
     String getEmail();
+    int getId();
     
     static int generateVerificationCode() {
         Random rand = new Random();
         return 100000 + rand.nextInt(900000); 
+    }
+
+    static void updateUserInDatabase(String currentEmail, String newUsername, String newFirstName, String newLastName, String newEmail, String newPassword) {
+        String query = "UPDATE users SET "
+                + "user_name = COALESCE(?, user_name), "
+                + "first_name = COALESCE(?, first_name), "
+                + "last_name = COALESCE(?, last_name), "
+                + "email = COALESCE(?, email), "
+                + "password = COALESCE(SHA2(?, 256), password) "
+                + "WHERE email = ?";
+
+        try (Connection conn = DatabaseConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            // Set parameters (empty values mean "keep old data")
+            stmt.setString(1, newUsername.isEmpty() ? null : newUsername);
+            stmt.setString(2, newFirstName.isEmpty() ? null : newFirstName);
+            stmt.setString(3, newLastName.isEmpty() ? null : newLastName);
+            stmt.setString(4, newEmail.isEmpty() ? null : newEmail);
+            stmt.setString(5, newPassword.isEmpty() ? null : newPassword);
+            stmt.setString(6, currentEmail);
+
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("User updated successfully!");
+            } else {
+                System.out.println("User not found or no changes made.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error updating user: " + e.getMessage());
+        }
     }
 
     static User selectUserFromDatabase(String email, String password) {
@@ -73,5 +106,4 @@ public interface User {
             System.out.println("Error inserting user into database: " + e.getMessage());
         }
     }
-    int getId();
 }
