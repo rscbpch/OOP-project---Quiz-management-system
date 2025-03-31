@@ -19,7 +19,7 @@ public interface User {
         String query = "SELECT user_id, user_name, first_name, last_name, email, password, role FROM users WHERE email = ?";
 
         try (Connection conn = DatabaseConnection.connect();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+            PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, email.trim());
             ResultSet rs = stmt.executeQuery();
@@ -54,7 +54,7 @@ public interface User {
         String query = "INSERT INTO users (user_name, first_name, last_name, email, password, role) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.connect();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+            PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, username);
             stmt.setString(2, firstName);
