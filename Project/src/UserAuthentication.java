@@ -5,28 +5,70 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class UserAuthentication {
-    public static String userLogin() {
+    // public static String userLogin() {
+    //     Scanner sc = new Scanner(System.in);
+    //     System.out.print("Enter your email: ");
+    //     String email = sc.nextLine();
+
+    //     System.out.print("Enter your password: ");
+    //     String password = sc.nextLine();
+
+    //     // Hash the input password using SHA-256
+    //     String hashedPassword = PasswordHasher.hashPassword(password);
+
+    //     // Query to check if the email and hashed password match
+    //     try (Connection conn = DatabaseConnection.connect()) {
+    //         String query = "SELECT email FROM users WHERE email = ? AND password = ?";
+    //         PreparedStatement stmt = conn.prepareStatement(query);
+    //         stmt.setString(1, email);
+    //         stmt.setString(2, hashedPassword);
+    //         ResultSet rs = stmt.executeQuery();
+
+    //         if (rs.next()) {
+    //             System.out.println("Login successful!");
+    //             return email;  // Return email instead of user object
+    //         } else {
+    //             System.out.println("Invalid credentials. Try again.");
+    //         }
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
+    //     return null;
+    // }
+
+    public static String userLogin(String expectedRole) {
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter your email: ");
-        String email = sc.nextLine();
+        String email = sc.nextLine().trim();
 
         System.out.print("Enter your password: ");
-        String password = sc.nextLine();
+        String password = sc.nextLine().trim();
 
         // Hash the input password using SHA-256
         String hashedPassword = PasswordHasher.hashPassword(password);
 
-        // Query to check if the email and hashed password match
+        // Query to check if the email, hashed password, and role match
         try (Connection conn = DatabaseConnection.connect()) {
-            String query = "SELECT email FROM users WHERE email = ? AND password = ?";
+            String query = "SELECT email, role FROM users WHERE email = ? AND password = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, email);
             stmt.setString(2, hashedPassword);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                System.out.println("Login successful!");
-                return email;  // Return email instead of user object
+                String userRole = rs.getString("role").trim();
+
+                // Debugging output
+                System.out.println("DEBUG: Stored Role = '" + userRole + "', Expected Role = '" + expectedRole + "'");
+
+                // Check if the role matches
+                if (userRole.equalsIgnoreCase(expectedRole)) {
+                    System.out.println("Login successful as " + userRole + "!");
+                    return email;  
+                } else {
+                    System.out.println("Access denied! You are registered as a " + userRole + ".");
+                    return null;
+                }
             } else {
                 System.out.println("Invalid credentials. Try again.");
             }

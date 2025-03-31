@@ -1,83 +1,101 @@
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class QuizManagementSystem {
-
-    public static void main(String[] args) {
-        System.out.println("\n== Welcome to the Quiz Management System! ==");
-
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Select your role \n1. Student \n2. Teacher \n3. Admin");
-        int role = opChecker(0, 3);
-        System.out.println();
-
-        // Instantiate QuizManager
-        QuizManager quizManager = new QuizManager();
-
-        if (role == 1) {  // Student
-            System.out.println("== Quiz Management System ==");
-            System.out.println("Welcome, Student! \nPlease select an option");
-            System.out.println("1. Login \n2. Register/Sign up");
-            int sOption = opChecker(0, 2);
+    public static void main(String[] args) throws SQLException {
+        while (true) {
+            System.out.println("\n== Welcome to the Quiz Management System! ==");
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Select your role \n1. Student \n2. Teacher \n3. Admin \n4. Exit");
+            int role = opChecker(0, 4);
             System.out.println();
-
-            if (sOption == 1) {
-                String email = UserAuthentication.userLogin();
-                if (email != null) {
-                    System.out.println("Please select an option");
-                    System.out.println("1. Take a quiz \n2. View quiz history \n3. Update profile");
-                    int ssOption = opChecker(0, 3);
+    
+            QuizManager quizManager = new QuizManager();
+    
+            if (role == 1) {  // Student
+                while (true) {
+                    System.out.println("== Quiz Management System ==");
+                    System.out.println("Welcome, Student! \nPlease select an option");
+                    System.out.println("1. Login \n2. Register/Sign up \n3. Go back");
+                    int sOption = opChecker(1, 3);
                     System.out.println();
-
-                    if (ssOption == 1) {
-                        // Call the takeQuiz method from QuizManager
-                        quizManager.playQuiz();;
-                    } else if (ssOption == 2) {
-                        int studentId = UserAuthentication.getUserIdByEmail(email); // Get student ID from email
-                        QuizAttempt.viewQuizAttempts(studentId);
+    
+                    if (sOption == 1) {
+                        String email = UserAuthentication.userLogin("student");
+                        if (email != null) {
+                            while (true) {  // Stay in the student menu until they exit
+                                System.out.println("Please select an option");
+                                System.out.println("1. Take a quiz \n2. View quiz history \n3. Update profile \n4. Logout");
+                                int ssOption = opChecker(1, 4);
+                                System.out.println();
+    
+                                if (ssOption == 1) {
+                                    int studentId = UserAuthentication.getUserIdByEmail(email);
+                                    quizManager.playQuiz(studentId);
+                                } else if (ssOption == 2) {
+                                    int studentId = UserAuthentication.getUserIdByEmail(email);
+                                    QuizAttempt.viewQuizAttempts(studentId);
+                                } else if (ssOption == 3) {
+                                    updateUser();
+                                } else {
+                                    break; 
+                                }
+                            }
+                        }
+                    } else if (sOption == 2) {
+                        User student = UserAuthentication.userRegister("Student");
+                        System.out.println("\nStudent registered successfully!");
                     } else {
-                        updateUser();
+                        break;  
                     }
                 }
-            } else if (sOption == 2) {
-                User student = UserAuthentication.userRegister("Student");
-                System.out.println("\nStudent registered successfully!");
-            }
-        } else if (role == 2) {  // Teacher
-            System.out.println("== Quiz Management System ==");
-            System.out.println("Welcome, Teacher! Please select an option");
-            System.out.println("1. Login \n2. Register/Sign up");
-            int tOption = opChecker(0, 2);
-            System.out.println();
-
-            if (tOption == 1) {
-                String email = UserAuthentication.userLogin();
-                if (email != null) {
-                    System.out.println("Please select an option");
-                    System.out.println("1. Create a quiz \n2. Show all created quiz");
-                    int ttOption = opChecker(0, 2);
+            } else if (role == 2) {  // Teacher
+                while (true) {
+                    System.out.println("== Quiz Management System ==");
+                    System.out.println("Welcome, Teacher! Please select an option");
+                    System.out.println("1. Login \n2. Register/Sign up \n3. Go back");
+                    int tOption = opChecker(1, 3);
                     System.out.println();
-
-                    if (ttOption == 1) {
-                        // Call the createQuiz method from QuizManager
-                        quizManager.createQuiz();
-                    } else if (ttOption == 2) {
-                        // Call the viewCreatedQuizzes method from QuizManager
-                        quizManager.displayQQ();;
+    
+                    if (tOption == 1) {
+                        String email = UserAuthentication.userLogin("teacher");
+                        if (email != null) {
+                            while (true) {  // Stay in teacher menu until they exit
+                                System.out.println("Please select an option");
+                                System.out.println("1. Create a quiz \n2. Show all created quizzes \n3. Update profile \n4. Logout");
+                                int ttOption = opChecker(1, 4);
+                                System.out.println();
+    
+                                if (ttOption == 1) {
+                                    quizManager.createQuiz();
+                                } else if (ttOption == 2) {
+                                    quizManager.displayQQ();
+                                } else if (ttOption == 3) {
+                                    updateUser();
+                                } else {
+                                    break;  
+                                }
+                            }
+                        }
+                    } else if (tOption == 2) {
+                        User teacher = UserAuthentication.userRegister("Teacher");
+                        System.out.println("\nTeacher registered successfully!");
+                    } else {
+                        break;  
                     }
                 }
-            } else if (tOption == 2) {
-                User teacher = UserAuthentication.userRegister("Teacher");
-                System.out.println("\nTeacher registered successfully!");
-            }
-        } else {                // Admin
-            String email = UserAuthentication.userLogin();
-            if (email != null) {
-                // implement admin menu here
-                
-
+            } else if (role == 3) {  // Admin
+                String email = UserAuthentication.userLogin("admin");
+                if (email != null) {
+                    Admin admin = new Admin("superadmin", "super", "admin", "superadmin@gmail.com", "admin123");
+                    admin.adminMenu();
+                }
+            } else {
+                break;  
             }
         }
     }
+    
 
     // Function to check for available option
     public static int opChecker(int input, int option) {

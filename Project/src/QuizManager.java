@@ -2,13 +2,6 @@ import java.sql.*;
 import java.util.*;
 
 public class QuizManager {
-    private HashMap<String, Quiz> quizStorage;
-
-    // initailize the map
-    public QuizManager () {
-        this.quizStorage = new HashMap<>();
-    }
-
     public void createQuiz () {
         Scanner scanner = new Scanner(System.in);
         
@@ -164,43 +157,48 @@ public class QuizManager {
     }
 
     //play time
-    public void playQuiz() {
-        Scanner scanner = new Scanner(System.in);
-        getQuiz();
-        System.out.println("Enter the quiz you want to play: ");
-        int playIndex = scanner.nextInt();
-        scanner.nextLine();
-        int correctStorage = 0;
 
+    public void playQuiz(int studentId) {
+        Scanner scanner = new Scanner(System.in);
+        getQuiz();  // Display available quizzes
+        System.out.println("Enter the quiz ID you want to play: ");
+        int quizId = scanner.nextInt();
+        scanner.nextLine();  // Consume newline
+        int correctStorage = 0;
+        int totalQuestions = 0;
+    
         try {
             Connection con = DatabaseConnection.connect();
-            String selectQuery = "select * from qcms where quiz_id = ?";
+            String selectQuery = "SELECT * FROM qcms WHERE quiz_id = ?";
             PreparedStatement psSelect = con.prepareStatement(selectQuery);
-            psSelect.setInt(1, playIndex);
+            psSelect.setInt(1, quizId);
             ResultSet rs = psSelect.executeQuery();
+    
             while (rs.next()) {
-                // int questionId = rs.getInt("qcmId"); // Assuming 'qcmId' is the ID column for the question
-                String question = rs.getString("question"); // Get the question text
-                String option1 = rs.getString("option_1"); // Option 1
-                String option2 = rs.getString("option_2"); // Option 2
-                String option3 = rs.getString("option_3"); // Option 3
-                String option4 = rs.getString("option_4"); // Option 4
-                int correctAnswer = rs.getInt("correct_option"); // Get the correct answer (index 0-3)
-
+                totalQuestions++; // Count total questions
+    
+                String question = rs.getString("question");
+                String option1 = rs.getString("option_1");
+                String option2 = rs.getString("option_2");
+                String option3 = rs.getString("option_3");
+                String option4 = rs.getString("option_4");
+                int correctAnswer = rs.getInt("correct_option");
+    
                 // Display the question and options
                 System.out.println("Question: " + question);
                 System.out.println("1. " + option1);
                 System.out.println("2. " + option2);
                 System.out.println("3. " + option3);
                 System.out.println("4. " + option4);
-                System.out.println("Enter you option (1-4):");                    
+                System.out.print("Enter your option (1-4): ");
                 int userAnswer = scanner.nextInt();
-                scanner.nextLine();
-                if ( userAnswer == correctAnswer){
-                    System.out.println("correct");
+                scanner.nextLine();  // Consume newline
+    
+                if (userAnswer == correctAnswer) {
+                    System.out.println("Correct!");
                     correctStorage++;
                 } else {
-                    System.out.println("Not correct");
+                    System.out.println("Not correct.");
                 }
                 System.out.println();
             }
@@ -208,9 +206,21 @@ public class QuizManager {
         } catch (SQLException err) {
             err.printStackTrace();
         }
-        
-
+    
+        // Calculate Score
+        int finalScore = (totalQuestions > 0) ? correctStorage : 0;
+        System.out.println("Quiz Completed! Your Score: " + finalScore);
+    
+        // Save Attempt to Database
+        QuizAttempt quizAttempt = new QuizAttempt(studentId, quizId, finalScore);
+        boolean inserted = quizAttempt.insertAttemptToDatabase();
+        if (inserted) {
+            System.out.println("Your attempt has been saved successfully!");
+        } else {
+            System.out.println("Error saving your quiz attempt.");
+        }
     }
+    
 
 
     // TO BE IMPLEMENTED IN MAIN CHAT
