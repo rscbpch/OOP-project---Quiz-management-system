@@ -344,7 +344,7 @@ public class Admin implements User {
         String lastName = inputLastName();
         String email = inputEmail();
         String password = inputPassword();
-        String role = "admin";
+        String role = "Admin";
 
         String hashedPassword = PasswordHasher.hashPassword(password);
 
