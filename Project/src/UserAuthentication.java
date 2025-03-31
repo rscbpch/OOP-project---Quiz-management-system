@@ -110,4 +110,22 @@ public class UserAuthentication {
         }
         return false;
     }
+
+    public static int getUserIdByEmail(String email) {
+        String query = "SELECT user_id FROM users WHERE email = ?";
+        try (Connection conn = DatabaseConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("user_id");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error fetching user ID: " + e.getMessage());
+        }
+        return -1; // Return -1 if user is not found
+    }
 }

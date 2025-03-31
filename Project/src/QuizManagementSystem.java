@@ -24,16 +24,18 @@ public class QuizManagementSystem {
                 String email = UserAuthentication.userLogin();
                 if (email != null) {
                     System.out.println("Please select an option");
-                    System.out.println("1. Take a quiz \n2. View quiz history");
-                    int ssOption = opChecker(0, 2);
+                    System.out.println("1. Take a quiz \n2. View quiz history \n3. Update profile");
+                    int ssOption = opChecker(0, 3);
                     System.out.println();
 
                     if (ssOption == 1) {
                         // Call the takeQuiz method from QuizManager
                         quizManager.playQuiz();;
                     } else if (ssOption == 2) {
-                        // Call the viewQuizHistory method from QuizManager
-                        System.out.println("Do smth");
+                        int studentId = UserAuthentication.getUserIdByEmail(email); // Get student ID from email
+                        QuizAttempt.viewQuizAttempts(studentId);
+                    } else {
+                        updateUser();
                     }
                 }
             } else if (sOption == 2) {
